@@ -7,6 +7,12 @@
     <groupId>com.allin.shortlink</groupId>
     <artifactId>shortlink-all</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>admin</module>
+        <module>project</module>
+        <module>gateway</module>
+    </modules>
 
     <properties>
         <java.version>17</java.version>
@@ -100,6 +106,11 @@
         </dependencies>
     </dependencyManagement>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
