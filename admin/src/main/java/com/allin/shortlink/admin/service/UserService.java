@@ -1,8 +1,10 @@
 package com.allin.shortlink.admin.service;
 
 import com.allin.shortlink.admin.dao.entity.UserDO;
+import com.allin.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.allin.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.allin.shortlink.admin.dto.req.UserUpdateReqDTO;
+import com.allin.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.allin.shortlink.admin.dto.resp.UserRespDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -36,4 +38,18 @@ public interface UserService extends IService<UserDO> {
      * @param requestParam 修改用户请求参数
      */
     void update(UserUpdateReqDTO requestParam);
+
+    /**
+     * 用户登录
+     * @param requestParam 用户登录请求参数
+     * @return 用户登录返回参数
+     */
+    UserLoginRespDTO login(UserLoginReqDTO requestParam);
+
+    /**
+     * 检查用户是否登录
+     * @param username 用户名
+     * @param token 令牌
+     */
+    Boolean checkLogin(String username, String token);
 }
