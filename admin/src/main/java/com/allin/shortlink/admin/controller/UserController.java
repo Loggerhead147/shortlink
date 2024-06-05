@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.allin.shortlink.admin.common.convention.result.Result;
 import com.allin.shortlink.admin.common.convention.result.Results;
 import com.allin.shortlink.admin.dto.req.UserRegisterReqDTO;
+import com.allin.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.allin.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.allin.shortlink.admin.dto.resp.UserRespDTO;
 import com.allin.shortlink.admin.service.UserService;
@@ -52,4 +53,12 @@ public class UserController {
         return Results.success();
     }
 
+    /**
+     * 修改用户
+     */
+    @PutMapping("/api/short-link/v1/user")
+    public Result<Void> update(@RequestBody UserUpdateReqDTO requestParam) {
+        userService.update(requestParam);
+        return Results.success();
+    }
 }
