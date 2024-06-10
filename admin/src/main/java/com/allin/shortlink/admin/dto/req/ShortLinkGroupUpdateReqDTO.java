@@ -6,7 +6,7 @@ import lombok.Data;
  * 短链接分组修改参数
  */
 @Data
-public class ShortLinkGroupUpdateGroup {
+public class ShortLinkGroupUpdateReqDTO {
     /**
      * 分组标识
      */
