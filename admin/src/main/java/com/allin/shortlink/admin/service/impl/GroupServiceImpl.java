@@ -4,7 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import com.allin.shortlink.admin.common.biz.user.UserContext;
 import com.allin.shortlink.admin.dao.entity.GroupDO;
 import com.allin.shortlink.admin.dao.mapper.GroupMapper;
-import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateGroup;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.allin.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.allin.shortlink.admin.service.GroupService;
 import com.allin.shortlink.admin.toolkit.RandomGenerator;
@@ -48,7 +49,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     }
 
     @Override
-    public void updateGroup(ShortLinkGroupUpdateGroup requestParam) {
+    public void updateGroup(ShortLinkGroupUpdateReqDTO requestParam) {
         LambdaUpdateWrapper<GroupDO> updateWrapper = Wrappers.lambdaUpdate(GroupDO.class)
                 .eq(GroupDO::getUsername, UserContext.getUsername())
                 .eq(GroupDO::getGid, requestParam.getGid())
@@ -67,6 +68,20 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         GroupDO groupDO = new GroupDO();
         groupDO.setDelFlag(1);
         baseMapper.update(groupDO, updateWrapper);
+    }
+
+    @Override
+    public void sortGroup(List<ShortLinkGroupSortReqDTO> requestParam) {
+        requestParam.forEach(each -> {
+            GroupDO groupDO = GroupDO.builder()
+                    .sortOrder(each.getSortOrder())
+                    .build();
+            LambdaUpdateWrapper<GroupDO> updateWrapper = Wrappers.lambdaUpdate(GroupDO.class)
+                    .eq(GroupDO::getUsername, UserContext.getUsername())
+                    .eq(GroupDO::getGid, each.getGid())
+                    .eq(GroupDO::getDelFlag, 0);
+            baseMapper.update(groupDO, updateWrapper);
+        });
     }
 
     private boolean hasGid(String gid) {

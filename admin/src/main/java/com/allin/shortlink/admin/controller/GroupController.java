@@ -2,8 +2,9 @@ package com.allin.shortlink.admin.controller;
 
 import com.allin.shortlink.admin.common.convention.result.Result;
 import com.allin.shortlink.admin.common.convention.result.Results;
-import com.allin.shortlink.admin.dto.req.ShortLinkGroupSaveGroup;
-import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateGroup;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupSaveReqDTO;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.allin.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.allin.shortlink.admin.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class GroupController {
      * 新增短链接分组
      */
     @PostMapping("/api/short-link/v1/group")
-    public Result<Void> saveGroup(@RequestBody ShortLinkGroupSaveGroup requestParam){
+    public Result<Void> saveGroup(@RequestBody ShortLinkGroupSaveReqDTO requestParam){
         groupService.saveGroup(requestParam.getName());
         return Results.success();
     }
@@ -41,7 +42,7 @@ public class GroupController {
      * 修改短链接分组名称
      */
     @PutMapping("/api/short-link/v1/group")
-    public Result<Void> updateGroup(@RequestBody ShortLinkGroupUpdateGroup requestParam){
+    public Result<Void> updateGroup(@RequestBody ShortLinkGroupUpdateReqDTO requestParam){
         groupService.updateGroup(requestParam);
         return Results.success();
     }
@@ -55,4 +56,12 @@ public class GroupController {
         return Results.success();
     }
 
+    /**
+     * 短链接分组排序
+     */
+    @PostMapping("/api/short-link/v1/group/sort")
+    public Result<Void> sortGroup(@RequestBody List<ShortLinkGroupSortReqDTO> requestParam){
+        groupService.sortGroup(requestParam);
+        return Results.success();
+    }
 }

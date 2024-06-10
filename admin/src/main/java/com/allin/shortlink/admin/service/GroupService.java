@@ -2,7 +2,8 @@ package com.allin.shortlink.admin.service;
 
 
 import com.allin.shortlink.admin.dao.entity.GroupDO;
-import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateGroup;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
+import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.allin.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -26,10 +27,15 @@ public interface GroupService extends IService<GroupDO> {
     /**
      * 修改用户短链接分组名称
      */
-    void updateGroup(ShortLinkGroupUpdateGroup requestParam);
+    void updateGroup(ShortLinkGroupUpdateReqDTO requestParam);
 
     /**
      * 删除用户短链接分组
      */
     void deleteGroup(String gid);
+
+    /**
+     * 短链接分组排序
+     */
+    void sortGroup(List<ShortLinkGroupSortReqDTO> requestParam);
 }
