@@ -1,6 +1,7 @@
 package com.allin.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.allin.shortlink.admin.common.biz.user.UserContext;
 import com.allin.shortlink.admin.dao.entity.GroupDO;
 import com.allin.shortlink.admin.dao.mapper.GroupMapper;
 import com.allin.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
@@ -36,10 +37,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
 
     @Override
     public List<ShortLinkGroupRespDTO> listGroup() {
-        // TODO 获取用户名
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getDelFlag, 0)
-                .eq(GroupDO::getUsername, "mading")
+                .eq(GroupDO::getUsername, UserContext.getUsername())
                 .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime);
         List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
         return BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
@@ -48,8 +48,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     private boolean hasGid(String gid) {
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getGid, gid)
-                // TODO 设置用户名
-                .eq(GroupDO::getUsername, null);
+                .eq(GroupDO::getUsername, UserContext.getUsername());
         GroupDO hasGroupFlag = baseMapper.selectOne(queryWrapper);
         // TODO 此处逻辑应取反？
         return hasGroupFlag == null;

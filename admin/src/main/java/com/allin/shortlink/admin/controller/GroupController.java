@@ -31,6 +31,9 @@ public class GroupController {
         return Results.success();
     }
 
+    /**
+     * 查询短链接分组集合
+     */
     @GetMapping("/api/short-link/v1/group")
     public Result<List<ShortLinkGroupRespDTO>> listGroup(){
         return Results.success(groupService.listGroup());
