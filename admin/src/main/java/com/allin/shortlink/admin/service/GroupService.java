@@ -9,4 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface GroupService extends IService<GroupDO> {
 
+    /**
+     * 新增短链接分组
+     */
+    void saveGroup(String groupName);
 }
