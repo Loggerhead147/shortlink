@@ -29,9 +29,9 @@ public class UserTransmitFilter implements Filter {
 
     // TODO URI 里包含 admin，包含新增用户路径吗?
     private static final List<String> IGNORE_URI = Lists.newArrayList(
-            "/api/short-link/v1/user/login",
-            "/api/short-link/v1/user/has-username",
-            "/api/short-link/v1/user"      // 新增用户
+            "/api/short-link/admin/v1/user/login",
+            "/api/short-link/admin/v1/user/has-username",
+            "/api/short-link/admin/v1/user"      // 新增用户
     );
 
     @SneakyThrows
