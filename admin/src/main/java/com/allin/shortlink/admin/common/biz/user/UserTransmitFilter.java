@@ -30,8 +30,7 @@ public class UserTransmitFilter implements Filter {
     // TODO URI 里包含 admin，包含新增用户路径吗?
     private static final List<String> IGNORE_URI = Lists.newArrayList(
             "/api/short-link/admin/v1/user/login",
-            "/api/short-link/admin/v1/user/has-username",
-            "/api/short-link/admin/v1/user"      // 新增用户
+            "/api/short-link/admin/v1/user/has-username"
     );
 
     @SneakyThrows
@@ -41,6 +40,7 @@ public class UserTransmitFilter implements Filter {
         String requestURI = httpServletRequest.getRequestURI();
         if (!IGNORE_URI.contains(requestURI)) {
             String method = httpServletRequest.getMethod();
+            // 注册用户
             if (!(Objects.equals(requestURI, "/api/short-link/admin/v1/user") && Objects.equals(method, "POST"))) {
                 String username = httpServletRequest.getHeader("username");
                 String token = httpServletRequest.getHeader("token");
