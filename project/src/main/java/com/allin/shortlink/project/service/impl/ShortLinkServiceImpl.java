@@ -8,8 +8,6 @@ import com.allin.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.allin.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.allin.shortlink.project.service.ShortLinkService;
 import com.allin.shortlink.project.toolkit.HashUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,16 +36,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         try {
             baseMapper.insert(shortLinkDO);
         } catch (DuplicateKeyException ex) {
-            // 处理布隆过滤器的误判问题,查询数据库，若短链接已存在，则创建失败
-            LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
-                    .eq(ShortLinkDO::getFullShortUrl, fullShortUrl);
-            ShortLinkDO hasShortLink = baseMapper.selectOne(queryWrapper);
-            if (hasShortLink != null) {
-                log.warn("短链接: {} 重复入库", fullShortUrl);
-                throw new ServiceException("短链接创建重复");
-            }
+            log.warn("短链接: {} 重复入库", fullShortUrl);
+            throw new ServiceException("短链接创建重复");
+
         }
-        shortUriCreateCachePenetrationBloomFilter.add(shortLinkSuffix);
+        shortUriCreateCachePenetrationBloomFilter.add(fullShortUrl);
         return ShortLinkCreateRespDTO.builder()
                 .fullShortUrl(shortLinkDO.getFullShortUrl())
                 .originUrl(requestParam.getOriginUrl())
