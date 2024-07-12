@@ -1,4 +1,4 @@
-package com.allin.shortlink.admin.remote.dto;
+package com.allin.shortlink.admin.remote;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
