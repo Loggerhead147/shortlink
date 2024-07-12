@@ -2,11 +2,14 @@ package com.allin.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.allin.shortlink.admin.common.biz.user.UserContext;
+import com.allin.shortlink.admin.common.convention.result.Result;
 import com.allin.shortlink.admin.dao.entity.GroupDO;
 import com.allin.shortlink.admin.dao.mapper.GroupMapper;
 import com.allin.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.allin.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.allin.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
+import com.allin.shortlink.admin.remote.ShortLinkRemoteService;
+import com.allin.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.allin.shortlink.admin.service.GroupService;
 import com.allin.shortlink.admin.toolkit.RandomGenerator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -17,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 短链接接口分组实现层
@@ -24,6 +29,14 @@ import java.util.List;
 @Slf4j
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
+
+    /**
+     * 后续重构为 SpringCloud Feign 调用
+     */
+    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
+    };
+
+
     @Override
     public void saveGroup(String groupName) {
         String gid;
@@ -45,6 +58,15 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getUsername, UserContext.getUsername())
                 .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime);
         List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
+        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService
+                .listGroupShortLinkCount(groupDOList.stream().map(GroupDO::getGid).toList());
+        List<ShortLinkGroupRespDTO> shortLinkGroupRespDTOList = BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
+        shortLinkGroupRespDTOList.forEach(each -> {
+            Optional<ShortLinkGroupCountQueryRespDTO> first = listResult.getData().stream()
+                    .filter(item -> Objects.equals(item.getGid(), each.getGid()))
+                    .findFirst();
+            first.ifPresent(item -> each.setShortLinkCount(first.get().getShortLinkCount()));
+        });
         return BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
     }
 
